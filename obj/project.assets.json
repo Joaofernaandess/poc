@@ -601,11 +601,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\jf030\\GestãoApi\\GestãoApi.csproj",
+      "projectUniqueName": "C:\\_git\\poc\\GestãoApi.csproj",
       "projectName": "GestãoApi",
-      "projectPath": "C:\\Users\\jf030\\GestãoApi\\GestãoApi.csproj",
+      "projectPath": "C:\\_git\\poc\\GestãoApi.csproj",
       "packagesPath": "C:\\Users\\jf030\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\jf030\\GestãoApi\\obj\\",
+      "outputPath": "C:\\_git\\poc\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\jf030\\AppData\\Roaming\\NuGet\\NuGet.Config",
