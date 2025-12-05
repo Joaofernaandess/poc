@@ -1,27 +1,24 @@
 using Npgsql;
-using GestãoApi;
-using System.Runtime.CompilerServices;
-using System.Data.SqlTypes;
-using System.Security.Cryptography.X509Certificates;
-using System.Dynamic;
-namespace GestãoApi
+using GestaoApi;
+namespace GestaoApi
 {
     public class ClienteRepository
+    
     {
         private readonly string _connectionString;
         public ClienteRepository(IConfiguration configuration)
         {
-            _connectionString = configuration.GetConnectionString("DeafaultConnection");
-        
+            _connectionString = configuration.GetConnectionString("DefaultConnection");
         }
+
         // post \/
-        public async Task CreatAsync(Cliente cliente)
+        public async Task CreateAsync(Cliente cliente)
         {
             using (var connection  = new NpgsqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
 
-                var sql = @"INSERT INTO Clientes (Nome, Cpf, Telefone, Email) 
+                var sql = @"INSERT INTO Cliente (Nome, Cpf, Telefone, Email) 
                 VALUES (@Nome, @Cpf, @Tel, @Email)
                 RETURNING Id";
 
@@ -29,7 +26,7 @@ namespace GestãoApi
                 {
                     command.Parameters.AddWithValue("@Nome", cliente.Nome);
                     command.Parameters.AddWithValue("@Cpf", cliente.Cpf ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@tel", cliente.Telefone ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@Tel", cliente.Telefone ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue("@Email", cliente.Email ?? (object)DBNull.Value);
                     cliente.Clienteid = (Guid)await command.ExecuteScalarAsync();
                 }
@@ -42,7 +39,7 @@ namespace GestãoApi
             using (var connection = new NpgsqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
-                var sql = "Select *FROM Clientes";
+                var sql = "Select * FROM Cliente";
                 using (var command = new NpgsqlCommand(sql, connection ))
                 using ( var reader = await command.ExecuteReaderAsync())
                 {
@@ -62,13 +59,46 @@ namespace GestãoApi
             }
             return lista;           
         }
+        public async Task<Cliente> GetByIdAsync(Guid id)
+        {
+            Cliente clienteEncontrado = null;
+
+            using(var connection = new NpgsqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                var sql = "SELECT * FROM Cliente WHERE Id = @Id";
+                using(var command = new NpgsqlCommand(sql, connection))
+                {
+                    command.Parameters.AddWithValue("@Id", id);
+
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        if(await reader.ReadAsync())
+                        {
+                            clienteEncontrado = new Cliente
+                            {
+                                Clienteid = reader.GetGuid (reader.GetOrdinal("Id")),
+                                Nome = reader.GetString(reader.GetOrdinal("Nome")),
+                                Cpf = reader.IsDBNull(reader.GetOrdinal("Cpf"))? null : reader.GetString(reader.GetOrdinal ("Cpf")),
+                                Email = reader.IsDBNull(reader.GetOrdinal("Email"))? null : reader.GetString(reader.GetOrdinal("Email")),
+                                Telefone = reader.IsDBNull(reader.GetOrdinal("Telefone"))? null : reader.GetString(reader.GetOrdinal
+                                ("Telefone"))
+                            };
+                        }
+                    }
+
+                }
+            }
+            return clienteEncontrado;
+        }
+        
         public async Task DeleteAsync(Guid id)
             {
                 using(var connection = new NpgsqlConnection(_connectionString))
                 {
                     await connection.OpenAsync();
                     var sql = "DELETE FROM Cliente WHERE Id = @Id";
-                using (var command = new NpgsqlCommand(sql, connection))
+                    using (var command = new NpgsqlCommand(sql, connection))
                     {
                         command.Parameters.AddWithValue("@Id", id);
                         await command.ExecuteNonQueryAsync();

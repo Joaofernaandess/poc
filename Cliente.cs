@@ -11,3 +11,14 @@ namespace GestãoApi // mostrando dentro da onde o comando deve agir
         // get = é ler o comando, set =  é gravar
     }
 }
+namespace GestaoApi
+{
+    public class Cliente
+    {
+        public Guid Id { get; set; }
+        public string? Nome { get; set; }
+        public string? Cpf { get; set; }
+        public string? Telefone { get; set; }
+        public string? Email { get; set; }
+    }
+}
