@@ -1,16 +1,16 @@
 using System.Runtime.CompilerServices;
-using GestãoApi;
+using Teste;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<ClienteRepository>();
 
 var app = builder.Build();
-if (app.Environment.IsDevelopment())
-{
+//if (app.Environment.IsDevelopment())
+//{
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+//}
 app.UseHttpsRedirection();
 
 app.MapPost("/Cliente", async (Cliente cliente, ClienteRepository repo) =>
@@ -20,7 +20,7 @@ app.MapPost("/Cliente", async (Cliente cliente, ClienteRepository repo) =>
         return Results.BadRequest("Ei! O nome é obrigatório.");
     }
     await repo.CreateAsync(cliente);
-    return Results.Created($"/Cliente/{cliente.Clienteid}", cliente);
+    return Results.Created($"/Cliente/{cliente.Id}", cliente);
 });
 
 app.MapGet("/Cliente", async(ClienteRepository repo) =>

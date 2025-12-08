@@ -1,6 +1,6 @@
 using Npgsql;
-using GestaoApi;
-namespace GestaoApi
+using Teste;
+namespace Teste
 {
     public class ClienteRepository
     
@@ -18,9 +18,9 @@ namespace GestaoApi
             {
                 await connection.OpenAsync();
 
-                var sql = @"INSERT INTO Cliente (Nome, Cpf, Telefone, Email) 
-                VALUES (@Nome, @Cpf, @Tel, @Email)
-                RETURNING Id";
+                var sql = @"INSERT INTO ""Cliente"" (""Nome"", ""Cpf"", ""Telefone"" , ""Email"") 
+                VALUES (@Nome, CAST(@Cpf AS INTEGER) , CAST(@Tel AS INTEGER), @Email)
+                RETURNING ""Id"" ";
 
                 using (var command = new NpgsqlCommand(sql, connection))
                 {
@@ -28,7 +28,7 @@ namespace GestaoApi
                     command.Parameters.AddWithValue("@Cpf", cliente.Cpf ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue("@Tel", cliente.Telefone ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue("@Email", cliente.Email ?? (object)DBNull.Value);
-                    cliente.Clienteid = (Guid)await command.ExecuteScalarAsync();
+                    cliente.Id = (Guid)await command.ExecuteScalarAsync();
                 }
             }
         }
@@ -39,7 +39,7 @@ namespace GestaoApi
             using (var connection = new NpgsqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
-                var sql = "Select * FROM Cliente";
+                var sql = @"Select * FROM ""Cliente"" ";
                 using (var command = new NpgsqlCommand(sql, connection ))
                 using ( var reader = await command.ExecuteReaderAsync())
                 {
@@ -47,9 +47,9 @@ namespace GestaoApi
                     {
                         lista.Add(new Cliente
                         {
-                            Clienteid = reader.GetGuid(reader.GetOrdinal("Id")),
+                            Id = reader.GetGuid(reader.GetOrdinal("Id")),
                             Nome = reader.GetString(reader.GetOrdinal("Nome")),
-                            Cpf = reader.IsDBNull(reader.GetOrdinal("Cpf")) ? null: reader.GetString(reader.GetOrdinal("cpf")),
+                            Cpf = reader.IsDBNull(reader.GetOrdinal("Cpf")) ? null: reader.GetString(reader.GetOrdinal("Cpf")),
                             Telefone = reader.IsDBNull(reader.GetOrdinal("Telefone")) ? null: reader.GetString(reader.GetOrdinal("Telefone")),
                             Email = reader.IsDBNull(reader.GetOrdinal("Email")) ? null: reader.GetString(reader.GetOrdinal("Email")),
 
@@ -66,7 +66,7 @@ namespace GestaoApi
             using(var connection = new NpgsqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
-                var sql = "SELECT * FROM Cliente WHERE Id = @Id";
+                var sql = @"SELECT * FROM ""Cliente"" WHERE Id = @Id";
                 using(var command = new NpgsqlCommand(sql, connection))
                 {
                     command.Parameters.AddWithValue("@Id", id);
@@ -77,7 +77,7 @@ namespace GestaoApi
                         {
                             clienteEncontrado = new Cliente
                             {
-                                Clienteid = reader.GetGuid (reader.GetOrdinal("Id")),
+                                Id = reader.GetGuid (reader.GetOrdinal("Id")),
                                 Nome = reader.GetString(reader.GetOrdinal("Nome")),
                                 Cpf = reader.IsDBNull(reader.GetOrdinal("Cpf"))? null : reader.GetString(reader.GetOrdinal ("Cpf")),
                                 Email = reader.IsDBNull(reader.GetOrdinal("Email"))? null : reader.GetString(reader.GetOrdinal("Email")),
@@ -93,17 +93,17 @@ namespace GestaoApi
         }
         
         public async Task DeleteAsync(Guid id)
-            {
+        {
                 using(var connection = new NpgsqlConnection(_connectionString))
                 {
                     await connection.OpenAsync();
-                    var sql = "DELETE FROM Cliente WHERE Id = @Id";
+                    var sql = @"DELETE FROM ""Cliente"" WHERE Id = @Id";
                     using (var command = new NpgsqlCommand(sql, connection))
                     {
                         command.Parameters.AddWithValue("@Id", id);
                         await command.ExecuteNonQueryAsync();
                     }
                 }
-            }
+        }
     }
 }
