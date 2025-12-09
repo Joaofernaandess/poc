@@ -36,10 +36,11 @@ namespace Teste
         public async Task<List<Cliente>> GetAllAsync()
         {
             var lista = new List<Cliente>();
+
             using (var connection = new NpgsqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
-                var sql = @"Select * FROM ""Cliente"" ";
+                var sql = @"SELECT * FROM ""Cliente"" ";
                 using (var command = new NpgsqlCommand(sql, connection ))
                 using ( var reader = await command.ExecuteReaderAsync())
                 {
@@ -59,6 +60,8 @@ namespace Teste
             }
             return lista;           
         }
+
+        // GET ID
         public async Task<Cliente> GetByIdAsync(Guid id)
         {
             Cliente clienteEncontrado = null;
@@ -66,7 +69,7 @@ namespace Teste
             using(var connection = new NpgsqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
-                var sql = @"SELECT * FROM ""Cliente"" WHERE Id = @Id";
+                var sql = @"SELECT * FROM ""Cliente"" WHERE ""Id"" = @Id";
                 using(var command = new NpgsqlCommand(sql, connection))
                 {
                     command.Parameters.AddWithValue("@Id", id);
@@ -81,8 +84,7 @@ namespace Teste
                                 Nome = reader.GetString(reader.GetOrdinal("Nome")),
                                 Cpf = reader.IsDBNull(reader.GetOrdinal("Cpf"))? null : reader.GetString(reader.GetOrdinal ("Cpf")),
                                 Email = reader.IsDBNull(reader.GetOrdinal("Email"))? null : reader.GetString(reader.GetOrdinal("Email")),
-                                Telefone = reader.IsDBNull(reader.GetOrdinal("Telefone"))? null : reader.GetString(reader.GetOrdinal
-                                ("Telefone"))
+                                Telefone = reader.IsDBNull(reader.GetOrdinal("Telefone"))? null : reader.GetString(reader.GetOrdinal ("Telefone"))
                             };
                         }
                     }
@@ -97,7 +99,8 @@ namespace Teste
                 using(var connection = new NpgsqlConnection(_connectionString))
                 {
                     await connection.OpenAsync();
-                    var sql = @"DELETE FROM ""Cliente"" WHERE Id = @Id";
+
+                    var sql = @"DELETE FROM ""Cliente"" WHERE ""Id"" = @Id";
                     using (var command = new NpgsqlCommand(sql, connection))
                     {
                         command.Parameters.AddWithValue("@Id", id);

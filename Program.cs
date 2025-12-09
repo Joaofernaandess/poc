@@ -13,17 +13,17 @@ var app = builder.Build();
 //}
 app.UseHttpsRedirection();
 
-app.MapPost("/Cliente", async (Cliente cliente, ClienteRepository repo) =>
+app.MapPost("/clientes", async (Cliente cliente, ClienteRepository repo) =>
 {
     if(string.IsNullOrEmpty(cliente.Nome))
     {
         return Results.BadRequest("Ei! O nome é obrigatório.");
     }
     await repo.CreateAsync(cliente);
-    return Results.Created($"/Cliente/{cliente.Id}", cliente);
+    return Results.Created($"/clienteS/{cliente.Id}", cliente);
 });
 
-app.MapGet("/Cliente", async(ClienteRepository repo) =>
+app.MapGet("/clientes", async(ClienteRepository repo) =>
 {
     var lista = await repo.GetAllAsync();
     return Results.Ok(lista);
@@ -37,7 +37,7 @@ app.MapGet("/clientes/{id}", async (Guid id, ClienteRepository repo) =>
     return Results.Ok(cliente);
 });
 
-app.MapDelete("/cliente/{id}", async (Guid id, ClienteRepository repo) =>
+app.MapDelete("/clientes/{id}", async (Guid id, ClienteRepository repo) =>
 {
     await repo.DeleteAsync(id);
     return Results.Ok("Cliente removido com sucesso!");
