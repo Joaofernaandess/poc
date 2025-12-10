@@ -28,10 +28,10 @@ C:\_git\poc\obj\Debug\net8.0\staticwebassets.build.json
 C:\_git\poc\obj\Debug\net8.0\staticwebassets.build.json.cache
 C:\_git\poc\obj\Debug\net8.0\staticwebassets.development.json
 C:\_git\poc\obj\Debug\net8.0\staticwebassets.build.endpoints.json
-C:\_git\poc\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\_git\poc\obj\Debug\net8.0\GestãoApi.csproj.Up2Date
 C:\_git\poc\obj\Debug\net8.0\GestãoApi.dll
 C:\_git\poc\obj\Debug\net8.0\refint\GestãoApi.dll
 C:\_git\poc\obj\Debug\net8.0\GestãoApi.pdb
 C:\_git\poc\obj\Debug\net8.0\GestãoApi.genruntimeconfig.cache
 C:\_git\poc\obj\Debug\net8.0\ref\GestãoApi.dll
+C:\_git\poc\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
